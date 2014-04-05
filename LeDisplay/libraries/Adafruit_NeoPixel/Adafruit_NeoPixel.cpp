@@ -41,19 +41,25 @@
 
 #include "Adafruit_NeoPixel.h"
 
-Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint8_t p, uint8_t t) {
-  numBytes = n * 3;
+Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint8_t p, uint8_t t) 
+  : numLEDs(n), numBytes(3*n), type(t), pin(p)
+{
+//  numBytes = n * 3;
   if((pixels = (uint8_t *)malloc(numBytes))) {
     memset(pixels, 0, numBytes);
-    numLEDs = n;
-    type    = t;
-    pin     = p;
+//    numLEDs = n;
+//    type    = t;
+//    pin     = p;
     port    = portOutputRegister(digitalPinToPort(p));
     pinMask = digitalPinToBitMask(p);
     endTime = 0L;
   } else {
-    numLEDs = 0;
+//    numLEDs = 0;
   }
+}
+
+Adafruit_NeoPixel::~Adafruit_NeoPixel()
+{
 }
 
 void Adafruit_NeoPixel::begin(void) {
@@ -497,7 +503,7 @@ uint32_t Adafruit_NeoPixel::Color(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 // Query color from previously-set pixel (returns packed 32-bit RGB value)
-uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) {
+uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) const {
 
   if(n < numLEDs) {
     uint16_t ofs = n * 3;
@@ -513,6 +519,6 @@ uint32_t Adafruit_NeoPixel::getPixelColor(uint16_t n) {
   return 0; // Pixel # is out of bounds
 }
 
-uint16_t Adafruit_NeoPixel::numPixels(void) {
+uint16_t Adafruit_NeoPixel::numPixels(void) const {
   return numLEDs;
 }
